@@ -1,25 +1,18 @@
 
-mov ah, 0x0e ; teletype mode
-mov al, 64 ; start with the letter before 'A'
+[org 0x7c00]
+mov ah, 0x0e    ; telletype mode
+mov bx, dataarea
 
-loop:
-    inc al              ; increment by 1
-    cmp al, 91          ; 91 is the letter after 'Z'
-    je end 
-
-    test al, 1          ; Tests the last bit to see if the text is even (....0) or odd (....1)
-    jnz oddprint        ; jump if not match (odd)
-    jz evenprint        ; jump if match (even)
-
-evenprint:
-    add al, ('a' - 'A') ; add the difference of these two numbers (as chars are contiguous)
-    int 0x10            ; call print
-    sub al, ('a' - 'A') ; subtract to go back to our origional state
-    jmp loop            ; go back and try again
-
-oddprint:
+printString:
+    mov al, [bx]
+    cmp al, 0
+    je end
     int 0x10
-    jmp loop
+    inc bx
+    jmp printString
+
+dataarea:
+    db "Hello world!", 0
 
 end:
     jmp $                   ; jump to the current memory address
