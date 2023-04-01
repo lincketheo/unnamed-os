@@ -46,5 +46,4 @@ jmp $
 
 times 505-($-$$) db 0
 db 0x55, 0xaa
-
-![[Pasted image 20230330203359.png]]
+```
