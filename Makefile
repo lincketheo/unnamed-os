@@ -1,6 +1,3 @@
-
-
-
 all: ./build/boot.bin
 
 ./build/boot.bin: ./build
@@ -13,4 +10,3 @@ all: ./build/boot.bin
 
 clean:
 	rm -rf ./build
-

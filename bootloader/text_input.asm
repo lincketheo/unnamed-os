@@ -3,8 +3,6 @@
 getChar:
     mov ah, 0x00
     int 0x16
-    mov ah, 0x0e
-    int 0x10
     ret
 
 
@@ -19,6 +17,8 @@ _nextCharInput:
     cmp al, 13              ; carriage return
     je _done 
 
+    mov ah, 0x0e
+    int 0x10
     mov byte [si], al       ; Otherwise, write to location
 
     inc bx                  ; Next
