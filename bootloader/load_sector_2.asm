@@ -14,7 +14,7 @@ loadSector2:
 
     ; Read one sector
     mov al, 1
-    mov dl, [DRIVE_NUM]
+    mov dl, [DRIVE_NUMBER]
     
     int 0x13
     ret
