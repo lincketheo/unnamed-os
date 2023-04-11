@@ -2,7 +2,7 @@
 ## 0.0. Setup 
 
 ### 0.0.0. Cross compiler
-You need a cross compiler installed on your system, specifically for the i686 system (other CC's might work, I think i386 does, see [Virtualization](#virtualization) for my intended setup and architecture description to figure out if your desired CC works). Currently, it is not in my roadmap (yet) to support lots of architectures.
+You need a cross compiler installed on your system, specifically for the i686 system (other CC's might work, I think i386 does, see [Virtualization](#001-virtualization) for my intended setup and architecture description to figure out if your desired CC works). Currently, it is not in my roadmap (yet) to support lots of architectures.
 
 I followed [these instructions](https://wiki.osdev.org/GCC_Cross-Compiler) 
 to install my cross compiler in `~/opt/cross`. If you already
@@ -33,7 +33,7 @@ $ sudo apt-get install qemu-system
 $ sudo apt install nasm
 ```
 
-A bunch of other stuff, like build essentials, make etc. I'll list them some day, but if you have qemu and make installed, you can probably figure out what you don't have installed just by running the below commands in [Building and running](#building-and-running)
+A bunch of other stuff, like build essentials, make etc. I'll list them some day, but if you have qemu and make installed, you can probably figure out what you don't have installed just by running the below commands in [Building and running](#01-building-and-running)
 
 
 ## 0.1. Building and running
