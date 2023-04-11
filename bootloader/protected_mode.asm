@@ -1,23 +1,33 @@
-[bits 16]
-switch_to_32bit:
+_clear_screen:
+    mov ah, 0x00
+    mov al, 0x03
+    int 0x10
+    ret
+
+%include"gdt.asm"
+
+protected_mode_setup:
+    call _clear_screen
     cli                     ; 1. disable interrupts
-    lgdt [gdt_descriptor]   ; 2. load GDT descriptor
+
+    lgdt [gdtr]             ; 2. load GDT descriptor
+
+    ; Set protection enable bit in cr0 (control register 0)
+    ; (you can't just mov 1 into cr0, so use a general purpose extended (32 bit) register)
     mov eax, cr0
-    or eax, 0x1             ; 3. enable protected mode
+    or eax, 0x1            
     mov cr0, eax
-    jmp CODE_SEG:init_32bit ; 4. far jump
+    ; We are now in 32 bit protected mode
+
+    ; Far Jump to the code segment. It's located in the second
+    ; target of the gdt, so that's 0+8 bytes (first 8 bytes are null)
+    jmp code_seg:_protected_mode
 
 [bits 32]
-init_32bit:
-    mov ax, DATA_SEG        ; 5. update segment registers
+_protected_mode:
+    ; Set up the stack and data segments
+    mov ax, data_seg
     mov ds, ax
     mov ss, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
 
-    mov ebp, 0x90000        ; 6. setup stack
-    mov esp, ebp
-
-    call BEGIN_32BIT        ; 7. move back to mbr.asm
-
+    jmp KERNEL_LOCATION

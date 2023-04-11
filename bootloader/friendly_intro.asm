@@ -1,46 +1,53 @@
+; Usage: call friendlyIntro
+; no need to store anything in registers, this 
+; function does that all for you
 friendlyIntro:
-    call askName
-    call getUsersName
-    call printResponse
-    call printUsersName
-    call printExclamation
+    call _askName
+    call _getUsersName
+    call _printResponse
+    call _printUsersName
+    call _printProceed 
     ret
 
 %include"print_string.asm"
 %include"text_input.asm"
 
-askName:
-    mov si, nameQuestion
+_askName:
+    mov si, _nameQuestion
     call printString
     ret
 
-getUsersName:
-    mov si, usersName
+_getUsersName:
+    mov si, _usersName
     call getString
     ret
 
-printResponse:
-    mov si, response
+_printResponse:
+    mov si, _response
     call printString
     ret
 
-printUsersName:
-    mov si, usersName
+_printUsersName:
+    mov si, _usersName
     call printString
     ret
 
-printExclamation:
-    mov al, '!'
-    call printCharacter
+_printProceed:
+    mov si, _proceed
+    call printString 
     ret
+
+_max_user_name_chars equ 10
 
 ; DATA
-usersName:
-    times 11 db 0
+_usersName:
+    times _max_user_name_chars + 1 db 0       
 
-nameQuestion:
+_nameQuestion:
     db "Enter your name to continue.... ", 0
 
-response:
+_response:
     db " Hello ", 0
 
+_proceed:
+    db "! Press ENTER to proceed", 0

@@ -13,13 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Segmentation.md",
+                "file": "Global Descriptor Table (GDT).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "688f51df5fcd9da3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Pre Bootloader and Data Mapping.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -85,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Segmentation.md",
+                "file": "Pre Bootloader and Data Mapping.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Segmentation.md",
+                "file": "Pre Bootloader and Data Mapping.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Segmentation.md"
+                "file": "Pre Bootloader and Data Mapping.md"
               }
             }
           }
@@ -146,13 +159,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "aeb0ca99a1a94e0e",
+  "active": "688f51df5fcd9da3",
   "lastOpenFiles": [
-    "Pre Bootloader and Data Mapping.md",
+    "booting.md",
+    "Paging.md",
+    "Global Descriptor Table (GDT).md",
+    "The Bootloader.md",
     "Segmentation.md",
+    "Pre Bootloader and Data Mapping.md",
     "Pasted image 20230403211158.png",
     "Pasted image 20230403210931.png",
-    "Pasted image 20230330203201.png",
-    "The Bootloader.md"
+    "Pasted image 20230330203201.png"
   ]
 }

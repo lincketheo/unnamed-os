@@ -1,9 +1,6 @@
 ; Store a character in al
 printCharacter:
     mov ah, 0x0e ; Teletype output: http://www.ctyme.com/intr/rb-0106.htm
-    mov bh, 0x00 ; Page number - just use 0
-    mov bl, 0x01 ; color blue (if graphics mode enabled - dunno how to enable it, TODO later)
-
     int 0x10     ; call interrupt
     ret
 
