@@ -29,7 +29,6 @@ void printString(const char* str) {
 
     char* vga_start = VGA_START;
     const unsigned int len = strlen(str);
-    *(vga_start) = str[0];
 
     for(int i = 0; i < len; i++){
         *(vga_start + VGA_INC*i) = *(str + i);
