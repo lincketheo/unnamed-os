@@ -1,3 +1,6 @@
+; GDT describes segments (currently code and data) and their permissions (you can't execute the
+; data segment silly)
+
 ; References:
 ; Chapter 3.4.5 (https://www.intel.com/content/www/us/en/content-details/774490/intel-64-and-ia-32-architectures-software-developer-s-manual-volume-3a-system-programming-guide-part-1.html?wapkw=segment%20descriptor)
 ; And [OSDev wiki](https://wiki.osdev.org/Global_Descriptor_Table)

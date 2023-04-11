@@ -1,3 +1,9 @@
+; NOTE: This is run in real mode. All bios interrupts are free. 
+; Probably some security vulnerability here, I don't really know, I
+; don't really care (yet)
+
+
+
 ; Usage: call friendlyIntro
 ; no need to store anything in registers, this 
 ; function does that all for you
