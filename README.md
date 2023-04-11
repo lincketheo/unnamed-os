@@ -27,6 +27,10 @@ My setup, overall, is:
 ```
 $ sudo apt-get install qemu-system
 ```
+**NASM**:
+```
+$ sudo apt install nasm
+```
 
 A bunch of other stuff, like build essentials, make etc. I'll list them some day, but if you have qemu and make installed, you can probably figure out what you don't have installed just by running the below commands in [Building and running](#building-and-running)
 
@@ -75,3 +79,18 @@ Intel says `MB` in their reference manuals because MiB wasn't introduced until l
     - Not going to help you write code, but useful in learning about basics of computer stuff
 - [Intel Software Development Manual Volume 3A (System Programming Guide Part 1)](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf)
     - Good reference for GDT, protected mode, paging, etc. (The above also talks about paging, and segmentation)
+- [OS Dev Wiki](https://wiki.osdev.org/Expanded_Main_Page)
+    - Eventually, I'll remove these as this grows, but this is the small subset of the wiki I've referenced so far:
+    - [Setting up a gcc cross compiler](https://wiki.osdev.org/GCC_Cross-Compiler)
+    - [GDT](https://wiki.osdev.org/Global_Descriptor_Table) and [GDT Tutorial](https://wiki.osdev.org/GDT_Tutorial)
+    - [Protected mode](https://wiki.osdev.org/Protected_Mode)
+    - [Segmentation](https://wiki.osdev.org/Segmentation)
+    - [Rolling your own bootloader](https://wiki.osdev.org/Rolling_Your_Own_Bootloader)
+    - [Bootloader theory](https://wiki.osdev.org/Bootloader)
+- [Assembly cheat sheet]()
+- [Daedalus Community - Making an OS](https://www.youtube.com/playlist?list=PLm3B56ql_akNcvH8vvJRYOc7TbYhRs19M)
+- [NASM Reference](https://www.nasm.us/doc/)
+- [NASM cheat sheet](https://www.bencode.net/blob/nasmcheatsheet.pdf)
+- [Assembly Programming Topics](https://stanislavs.org/helppc/idx_assembler.html)
+- [TODO - go through this tutorial](https://cs.lmu.edu/~ray/notes/nasmtutorial/)
+- [Just a good website](https://stanislavs.org/helppc/)
