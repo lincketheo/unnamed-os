@@ -2,10 +2,11 @@
 ## 0.0. Setup 
 
 ### 0.0.0. Cross compiler
-You need a cross compiler installed on your system, specifically for the i686 system.
+You need a cross compiler installed on your system, specifically for the i686 system (other CC's might work, I think i386 does, see [Virtualization](#virtualization) for my intended setup and architecture description to figure out if your desired CC works). Currently, it is not in my roadmap (yet) to support lots of architectures.
+
 I followed [these instructions](https://wiki.osdev.org/GCC_Cross-Compiler) 
 to install my cross compiler in `~/opt/cross`. If you already
-have a cross compiler, just change `CROSS_COMPILER_ROOT` in the make file to your root and
+have a cross compiler, just change `CROSS_COMPILER_ROOT` in the `Makefile` to your root and
 associated commands. 
 
 ### 0.0.1. Virtualization
@@ -94,3 +95,12 @@ Intel says `MB` in their reference manuals because MiB wasn't introduced until l
 - [Assembly Programming Topics](https://stanislavs.org/helppc/idx_assembler.html)
 - [TODO - go through this tutorial](https://cs.lmu.edu/~ray/notes/nasmtutorial/)
 - [Just a good website](https://stanislavs.org/helppc/)
+
+# 3. TODO
+- (Search for TODO's in code base for minor improvements)
+- Set paging bit in cr0 and re work bootloader to implement paging
+- Study what comes after the bootloader. 
+- VGA driver and standard print library support
+    - printing to the screen
+    - setting the screen graphics
+    - robust-ness 
