@@ -64,8 +64,11 @@ TLDR, intel's names make no sense :). Frequently, these words are just missused 
 
 
 [32 bit and 64 bit:](https://www.aliencoders.org/content/basic-information-about-i386-i686-and-x8664-architectures/)
+    
     - A 32-bit OS will run on a 32-bit or 64-bit processor without any problem.
+    
     - A 32-bit application will run on a 32-bit or 64-bit OS without any problem.
+    
     - But a 64-bit application will only run on a 64-bit OS and a 64-bit OS will only run on a 64-bit processor
 
 ## 1.1. The mega mebi tera tebi... confusion
