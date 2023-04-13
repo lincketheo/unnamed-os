@@ -15,8 +15,15 @@ friendlyIntro:
     call _printProceed 
     ret
 
-%include"print_string.asm"
-%include"text_input.asm"
+%include"print_string_rm.asm"
+%include"text_input_rm.asm"
+
+_sleep_2_seconds:
+    mov ah, 0x86
+    mov dx, 0x8480
+    mov cx, 0x001e
+    int 0x15
+    ret
 
 _askName:
     mov si, _nameQuestion
@@ -41,6 +48,7 @@ _printUsersName:
 _printProceed:
     mov si, _proceed
     call printString 
+    call _sleep_2_seconds
     ret
 
 _max_user_name_chars equ 10
@@ -56,4 +64,4 @@ _response:
     db " Hello ", 0
 
 _proceed:
-    db "! Press ENTER to proceed", 0
+    db "!", 0

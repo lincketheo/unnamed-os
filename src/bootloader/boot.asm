@@ -20,7 +20,6 @@ mov [DRIVE_NUMBER], dl
 KERNEL_LOCATION equ 0x7e00
 
 ; Call a little friendly intro to begin. 
-; This is in real mode!
 call friendlyIntro
 
 ; Read 1 sector from the disk. This sector contains our kernel.
