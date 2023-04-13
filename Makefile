@@ -4,16 +4,16 @@ BUILDDIR := build
 
 # Compilers and flags
 CC=$(CROSS_COMPILE_ROOT)/bin/i686-elf-gcc
-CINCDIR=include
-CFLAGS=-ffreestanding -m32 -g -c -I$(CINCDIR)
+INCLUDES=include
+CFLAGS=-ffreestanding -m32 -g -c -I$(INCLUDES)
 
 LD=$(CROSS_COMPILE_ROOT)/bin/i686-elf-ld
 
 ASM=nasm
 
 # Sources and objects
-CSRC := $(shell find $(SRCDIR) -name "*.c") 		
-COBJ := $(subst $(SRCDIR)/,$(BUILDDIR)/,$(CSRC:%.c=%.o)) 	
+SRCS := $(shell find $(SRCDIR) -name "*.c")
+COBJ := $(subst $(SRCDIR)/,$(BUILDDIR)/,$(SRCS:%.c=%.o))
 
 ASMSRC = kernel/kernel_entry.asm
 ASMSRC := $(addprefix $(SRCDIR)/, $(ASMSRC))
@@ -44,6 +44,7 @@ $(BUILDDIR)/%.bin: $(SRCDIR)/%.asm
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c 
 	mkdir -p $(dir $@)
+	clang-format -i $^ -style llvm # TODO - make this more not dumb
 	$(CC) $(CFLAGS) -o $@ $^
 
 .PHONY: clean
