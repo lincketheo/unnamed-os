@@ -1,38 +1,53 @@
-CROSS_COMPILE_ROOT=~/opt/cross
+CROSS_COMPILE_ROOT=$(HOME)/opt/cross
+SRCDIR := src
+BUILDDIR := build
 
-# GCC
+# Compilers and flags
 CC=$(CROSS_COMPILE_ROOT)/bin/i686-elf-gcc
-CFLAGS=-ffreestanding -m32 -g -c
+CINCDIR=include
+CFLAGS=-ffreestanding -m32 -g -c -I$(CINCDIR)
 
-# LD
 LD=$(CROSS_COMPILE_ROOT)/bin/i686-elf-ld
 
-# Assembly
 ASM=nasm
 
-BUILD=./build
+# Sources and objects
+CSRC := $(shell find $(SRCDIR) -name "*.c") 		
+COBJ := $(subst $(SRCDIR)/,$(BUILDDIR)/,$(CSRC:%.c=%.o)) 	
 
-all: $(BUILD) $(BUILD)/os.bin
+ASMSRC = kernel/kernel_entry.asm
+ASMSRC := $(addprefix $(SRCDIR)/, $(ASMSRC))
+ASMOBJ := $(subst $(SRCDIR), $(BUILDDIR), $(ASMSRC:%.asm=%.o))
 
-$(BUILD)/os.bin: $(BUILD)/boot.bin $(BUILD)/kernel.bin
+OSTARGET=unnamed.bin
+
+
+all: $(OSTARGET)
+
+run: $(OSTARGET)
+	qemu-system-i386 $(OSTARGET)
+
+$(OSTARGET): $(BUILDDIR)/bootloader/boot.bin $(BUILDDIR)/kernel/kernel.bin
 	cat $^ > $@
 
-$(BUILD)/kernel.bin: $(BUILD)/kernel_entry.o $(BUILD)/kernel.o
-	$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary 
+$(BUILDDIR)/kernel/kernel.bin: $(COBJ) $(ASMOBJ)
+	mkdir -p $(dir $@)
+	$(LD) -o $@ -Ttext 0x1000 --oformat binary $^
 
-$(BUILD)/kernel_entry.o: ./kernel/kernel_entry.asm
-	$(ASM) $^ -f elf -o $@
+$(BUILDDIR)/%.o: $(SRCDIR)/%.asm
+	mkdir -p $(dir $@)
+	$(ASM) -f elf -o $@ $^
 
-$(BUILD)/kernel.o: ./kernel/kernel.c
-	$(CC) $(CFLAGS) $^ -o $@
+$(BUILDDIR)/%.bin: $(SRCDIR)/%.asm
+	mkdir -p $(dir $@)
+	$(ASM) -f bin -I$(SRCDIR)/bootloader -o $@ $^
 
-$(BUILD)/boot.bin: ./bootloader/boot.asm
-	$(ASM) -f bin $^ -o $@ -i./bootloader
-	
-$(BUILD):
-	mkdir $(BUILD)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c 
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -o $@ $^
 
 .PHONY: clean
 
 clean:
-	rm -rf $(BUILD)
+	rm -rf build
+	rm -f $(OSTARGET)
