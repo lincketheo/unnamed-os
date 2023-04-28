@@ -36,10 +36,14 @@ _protected_mode:
     mov ax, data_seg
     mov ds, ax
     mov ss, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
 
-    ; Other people did more here including setting up other segment registers and 
-    ; eip, but I don't know why yet so I didn't do that (TODO)
-    ; They said they were "Setting up the stack". I don't know what that means yet
-    ; I won't do that until it breaks so that I can figure out why
+    ; Set up the stack base and pointer
+    mov ebp, 0x90000
+    mov esp, ebp
 
+    ; Transfer control to the kernel :)
     jmp KERNEL_LOCATION
+

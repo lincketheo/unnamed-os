@@ -53,8 +53,6 @@ _gdt_start:
         ; bits : Third half of the base offset
         db 0x00
 
-        
-
     _gdt_data_descriptor:
         dw 0xffff
         dw 0x0000
@@ -62,6 +60,7 @@ _gdt_start:
         db 0b10010010
         db 0b11001111
         db 0x00
+
 _gdt_end:
 
 
