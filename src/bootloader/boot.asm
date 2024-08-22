@@ -1,5 +1,3 @@
-; A good article explaining booting: https://manybutfinite.com/post/how-computers-boot-up/ 
-
 ; ###################################################
 ; ############### Section Real Mode 
 [org 0x7c00]
@@ -232,6 +230,8 @@ gdtr:
 code_seg equ _gdt_code_descriptor - _gdt_start
 data_seg equ _gdt_data_descriptor - _gdt_start
 
+; ###################################################
+; ############### Section Protected Mode
 
 protected_mode_setup:
     call _clear_screen
@@ -248,14 +248,6 @@ protected_mode_setup:
     ; We are now in 32 bit protected mode
 
     ; Far Jump to the code segment. 
-    ; I got confused on this line of code from the OSDevWiki
-    ; A far jump takes the form:
-    ; jmp <gdt descriptor>:offset
-    ; Where gdt descriptor is the offset from the gdt root. 
-    ; For example
-    ; the first gdt descriptor would be 0x8 (because null entry)
-    ;
-    ; I couldn't find the official docs for this, though
     jmp code_seg:_protected_mode
 
 [bits 32]
