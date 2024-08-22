@@ -1,61 +1,24 @@
-CROSS_COMPILE_ROOT=$(HOME)/opt/cross
-SRCDIR := src
-BUILDDIR := build
+all: build build/unnamed_os.bin
 
-# C Compiler and flags
-CC=$(CROSS_COMPILE_ROOT)/bin/i686-elf-gcc
-INCLUDES=include
-CFLAGS=-ffreestanding -m32 -g -c -I$(INCLUDES)
+build:
+	mkdir $@
 
-# Linker
-LD=$(CROSS_COMPILE_ROOT)/bin/i686-elf-ld
-
-# Assembly compiler
-ASM=nasm
-
-# C source and object files as relative paths
-CSRC := $(shell find $(SRCDIR) -name "*.c")
-COBJ := $(subst $(SRCDIR)/,$(BUILDDIR)/,$(CSRC:%.c=%.o))
-
-# Assembly source and object files as relative paths (only those needing to be objects)
-ASMSRC = kernel/kernel_entry.asm
-ASMSRC := $(addprefix $(SRCDIR)/, $(ASMSRC))
-ASMOBJ := $(subst $(SRCDIR), $(BUILDDIR), $(ASMSRC:%.asm=%.o))
-
-# The operating system
-TARGET=unnamed.bin
-
-all: $(TARGET)
-
-run: $(TARGET)
-	qemu-system-x86_64 $(TARGET)
-
-$(TARGET): $(BUILDDIR)/bootloader/boot.bin $(BUILDDIR)/kernel/kernel.bin
+build/unnamed_os.bin: build/boot.bin build/kernel.bin 
 	cat $^ > $@
 
-# The binary kernel
-$(BUILDDIR)/kernel/kernel.bin: $(COBJ) $(ASMOBJ)
-	mkdir -p $(dir $@)
-	$(LD) -o $@ -Ttext 0x1000 --oformat binary $^
+build/boot.bin: src/bootloader/boot.asm 
+	nasm -f bin -o $@ $^
 
-# Any assembly that needs to be compiled into an object file (for use with c)
-$(BUILDDIR)/%.o: $(SRCDIR)/%.asm
-	mkdir -p $(dir $@)
-	$(ASM) -f elf -o $@ $^
+build/kernel_entry.o: src/kernel/kernel_entry.asm
+	nasm -f elf -o $@ $^
 
-# The bootloader (assembly binary files)
-$(BUILDDIR)/%.bin: $(SRCDIR)/%.asm
-	mkdir -p $(dir $@)
-	$(ASM) -f bin -I$(SRCDIR)/bootloader -o $@ $^
+build/kernel.o: src/kernel/kernel.c
+	gcc -ffreestanding -m32 -g -c -Iinclude -o $@ $^
 
-# C files needing to be compiled into object files
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c 
-	mkdir -p $(dir $@)
-	clang-format -i $^ -style llvm # TODO - make this more not dumb
-	$(CC) $(CFLAGS) -o $@ $^
+build/kernel.bin: build/kernel.o build/kernel_entry.o
+	ld -m elf_i386 -o $@ -Ttext 0x1000 --oformat binary $^
 
 .PHONY: clean
 
 clean:
 	rm -rf build
-	rm -f $(TARGET)
