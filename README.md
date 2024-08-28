@@ -17,6 +17,8 @@ $ make
 $ qemu-system-x86_64 build/unnamed_os.bin 
 # or for rhel:
 $ qemu-kvm -cpu host -drive file=./build/unnamed_os.bin,format=raw -nographic
+# View source 
+$ objdump -D -b binary -mi386 -Maddr32,data32 build/disk.img
 ```
 
 ## Notes:

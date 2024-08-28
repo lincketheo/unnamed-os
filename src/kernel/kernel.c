@@ -1,9 +1,11 @@
 /**
  * @brief The entry point into the kernel
  */
-extern void main(void) {
-  *(char *)0xb8000 = 'Q';
+volatile char* vga = (volatile char*)0xb8000;
+
+extern void main(void)
+{
+  vga[0] = 'Q';
+  vga[1] = 0x07;
   return;
 }
-
-

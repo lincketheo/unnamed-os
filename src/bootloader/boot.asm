@@ -165,100 +165,94 @@ _clear_screen:
 ; And [OSDev wiki](https://wiki.osdev.org/Global_Descriptor_Table)
 _gdt_start:
     _gdt_null:
-        times 8 db 0 
+        times 8 db 0  ; Null descriptor
 
     ; See [Segment Descriptor](https://wiki.osdev.org/Global_Descriptor_Table)
     _gdt_code_descriptor:
-        ; byte offset 0
+        dw 0xffff ; Segment Limit: First 16 bits (use all available memory)
+        dw 0x0000 ; Base Address: First (of three) base address
+        db 0x00   ; Second half of the base
 
-        ; bits 0-15: First 16 bits of segment limit
-        ; We want all 4 gigabytes, so our segment limit should
-        ; be (111111... x20) = 0xfffff (5 f's)
-        ; However, the processor puts this value and the later 1/2 byte value of the limit
-        ; together with this one, so this one is only 2 bytes (0xffff) to be combined with
-        ; (0xf) later on in the gdt
-        dw 0xffff
-        
-        ; bits 16-31 The first (of three) part of the base address (to be concatenated with
-        ; the later fields
-        dw 0x0000
-
-        ; byte offset 4
-        ; bits 0-7: The second half of the base
-        db 0x00
-
-        ; bits 15-12 (s, dpl, p)
-        ; p = 1 -> indicates that this is a valid segment (if 0, an exception will be thrown)
-        ; dpl = 00 -> Permission level 0 (most priveleged) Might change this, not sure
-        ; s = 1 -> Code or data segment (as opposed to a system segment)
-
-        ; bits 11-8 (Type): 
-        ; e = 1 -> Indicates this is an executable segment
-        ; dc = 0 -> Indicates that this segment grows upwards
-        ; rw = 1 -> Readable
-        ; a = 0 -> Access bit: Keep this 0, system sets to 1 when being accessed
+        ; (s, dpl, p, Type)
+        ; 1 -> Valid segment (required 1)
+        ; 00 -> Permission 0 
+        ; 1 -> Code or Data (not a system segment)
+        ; 1 -> Executable 
+        ; 0 -> Grows upwards 
+        ; 1 -> Readable 
+        ; 0 -> Access bit (system sets it to 1 when being accessed)
         db 0b10011010
 
-        ; bits 23-20 (avl, l, d/b, g)
-        ; g = 1 -> indicates that segment uses 4 KByte increments (ranges from 4KB to 4 GB) 
-        ; d/b = 1 -> Indicates 32 bit protected code segment (as opposed to 16)
-        ; l = 0 -> Long mode flag, I was told this should be 1 if d/b is not 0
-        ; avl = 0 (just used by the processor - no reason it's 0)
-        
-        ; bits 19-16 Segment limit pt 2 = 0xf (1111)
+        ; (avl, l, d/b, g)
+        ; 1 -> 4 KByte increments 
+        ; 1 -> 32 bit protected code segment (not 16)
+        ; 0 -> long mode flag (I was told this should be 1 if d/b is not 0)
+        ; 0 -> Just used by the processor 
+        ; 1111 -> Segment limit part 2 (20 bits total)
         db 0b11001111
-        
-        ; bits : Third half of the base offset
-        db 0x00
+        db 0x00 ; Base offset part 2
 
     _gdt_data_descriptor:
-        dw 0xffff
-        dw 0x0000
-        db 0x00
+        dw 0xffff ; Segment Limit: First 16 bits (use all available memory)
+        dw 0x0000 ; Base Address: First (of three) base address
+        db 0x00   ; Second half of the base
+
+        ; (s, dpl, p, Type)
+        ; 1 -> Valid segment (required 1)
+        ; 00 -> Permission 0 
+        ; 1 -> Code or Data (not a system segment)
+        ; 0 -> Not Executable 
+        ; 0 -> Grows upwards 
+        ; 1 -> Readable 
+        ; 0 -> Access bit (system sets it to 1 when being accessed)
         db 0b10010010
+
+        ; (avl, l, d/b, g)
+        ; 1 -> 4 KByte increments 
+        ; 1 -> 32 bit protected code segment (not 16)
+        ; 0 -> long mode flag (I was told this should be 1 if d/b is not 0)
+        ; 0 -> Just used by the processor 
+        ; 1111 -> Segment limit part 2 (20 bits total)
         db 0b11001111
-        db 0x00
+        db 0x00 ; Base offset part 2
 
 _gdt_end:
 
 
 gdtr:
-    dw _gdt_end - _gdt_start - 1
-    dd _gdt_start
-
-
-code_seg equ _gdt_code_descriptor - _gdt_start
-data_seg equ _gdt_data_descriptor - _gdt_start
+    dw _gdt_end - _gdt_start - 1 ; Limit (len(gdt) - 1)
+    dd _gdt_start                ; Base address of gdt
 
 ; ###################################################
 ; ############### Section Protected Mode
 
 protected_mode_setup:
     call _clear_screen
+
     cli                     ; 1. disable interrupts
 
     lgdt [gdtr]             ; 2. load GDT descriptor
 
     ; Set protection enable bit in cr0 (control register 0)
-    ; (you can't just mov 1 into cr0, so use a general purpose extended (32 bit) register)
     ; TODO For paging, set bit 31 I think 
     mov eax, cr0
     or eax, 0x1            
     mov cr0, eax
-    ; We are now in 32 bit protected mode
 
+    ; Now in 32 bit protected mode
     ; Far Jump to the code segment. 
-    jmp code_seg:_protected_mode
+    ; (remember 8 null bits in GDT)
+    jmp 0x08:_protected_mode
 
 [bits 32]
 _protected_mode:
     ; Set up the stack and data segments
-    mov ax, data_seg
+    mov ax, 0x10
     mov ds, ax
-    mov ss, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
+    mov ss, ax
 
     ; Set up the stack base and pointer
     mov ebp, 0x90000
